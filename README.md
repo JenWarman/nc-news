@@ -1,8 +1,10 @@
 # Northcoders News API
 
-For instructions, please head over to [L2C NC News](https://l2c.northcoders.com/courses/be/nc-news).
-
-
+You will need to create two .env files locally for this project -
+.env.test 
+.env.development
+Into each finel add PGDATABASE= with the correct database name for that environment.
+Then add these .env files to the .gitignore file. 
 
 --- 
 
