@@ -14,7 +14,6 @@ exports.getAllTopics = (request, response, next) => {
 exports.getAllEndPoints = (request, response) => {
     fetchAllEndPoints()
         .then((endPoints) => {
-            // console.log(endPoints, '<----endpoints')
             response.status(200).send(endPoints)
         })
         .catch((err) => {

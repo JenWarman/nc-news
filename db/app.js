@@ -7,11 +7,8 @@ app.get('/api/topics', getAllTopics);
 
 app.get('/api', getAllEndPoints)
 
-app.use((err, request, response, next) => {
-    // if(err.status === 204) {
-    //     response.status(204).send({msg: "No content found"})
-    // }
-    next()
-})
+// app.use((err, request, response, next) => {
+//     next()
+// })
 
 module.exports = app;

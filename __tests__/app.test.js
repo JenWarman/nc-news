@@ -54,7 +54,7 @@ describe('nc-news API', () => {
                     console.log(body, '<---body in test')
                     Object.keys(body).filter((endpoint) => {
                         console.log(endpoint, "<---enpoint")
-                        expect(endpoint).toMatch("GET /api" || "GET /api/topics" || "GET /api/articles")
+                        expect(endpoint).toMatch("GET /api" || "GET /api/topics" || "GET /api/articles" || "GET /api/comments" || "GET /api/users")
                     })
                 })
         })
