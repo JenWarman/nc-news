@@ -22,6 +22,10 @@ exports.fetchAllEndPoints = () => {
 exports.fetchArtcilesById = (article_id) => {
     let queryString = `SELECT * FROM articles`
     let queryValue = [];
+    const regex = /\D/ig;
+    if (regex.test(article_id)) {
+        return Promise.reject({status: 400, msg: 'Bad request'})
+    }
     if (article_id) {
         queryValue.push(article_id);
         queryString += ` WHERE article_id = $1`, [article_id];

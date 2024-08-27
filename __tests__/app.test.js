@@ -78,5 +78,13 @@ describe('nc-news API', () => {
                     expect(body.msg).toBe('Request not found');
                 })
         })
+        test('400: responds with error message if article_id is invalid', () => {
+            return request(app)
+                .get('/api/articles/IamNotAnId')
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Bad request');
+                })
+        })
     })
 })

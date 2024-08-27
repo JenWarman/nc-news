@@ -13,6 +13,9 @@ app.use((err, request, response, next) => {
     if (err.status === 404) {
         response.status(404).send({ msg: "Request not found" });
     }
+    if (err.status === 400) {
+        response.status(400).send({ msg: "Bad request" });
+    }
     next();
 })
 
