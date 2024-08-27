@@ -27,3 +27,22 @@ exports.fetchArticleById = (article_id) => {
             return rows;
         })
 }
+
+exports.fetchArticles = () => {
+    return db.query(`SELECT * FROM articles`)
+    .then(({rows}) => {
+        console.log(rows)
+        // const newObj = {
+        //     article_id: 0
+        // }
+        // const mappedRows = rows.map((value) => {
+        //     console.log(value.title, '<---value')
+        //     // value.article_id += newObj[article_id];
+        //     // return mappedRows;
+        // })
+        // console.log(newObj, '<----new Object')
+        
+        console.log(Object.keys(rows[0]), '<---rows in model')
+        return rows;
+    })
+}

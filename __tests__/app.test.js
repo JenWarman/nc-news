@@ -58,7 +58,6 @@ describe('nc-news API', () => {
             return request(app).get('/api/articles/1')
                 .expect(200)
                 .then(({ body }) => {
-                    console.log(body.length)
                     expect(body).toHaveLength(1);
                     expect(Array.isArray(body)).toBe(true);
                 })
@@ -80,4 +79,15 @@ describe('nc-news API', () => {
                 })
         })
     })
+    describe('GET /api/articles', () => {
+        test('200: responds with array of article objects', () => {
+            return request(app).get('/api/articles')
+                .expect(200)
+                .then(({ body }) => {
+                    console.log(body.articles, '<---body in test')
+                   expect(Array.isArray(body.articles)).toBe(true)  
+                })
+        }
+    )}
+    )
 })
