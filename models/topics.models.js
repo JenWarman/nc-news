@@ -17,14 +17,20 @@ exports.fetchAllEndPoints = () => {
             const parsedData = JSON.parse(data);
             return parsedData;
         })
-        .catch((err) => {
-            return err;
-        })
 }
 
 exports.fetchArtcilesById = (article_id) => {
-    return db.query(`SELECT * FROM articles WHERE article_id = $1`, [article_id])
-    .then(({rows}) => {
-        return rows;
-    })
+    let queryString = `SELECT * FROM articles`
+    let queryValue = [];
+    if (article_id) {
+        queryValue.push(article_id);
+        queryString += ` WHERE article_id = $1`, [article_id];
+    }
+    return db.query(`${queryString}`, queryValue)
+        .then(({ rows }) => {
+            if (rows.length === 0) {
+                return Promise.reject({ status: 404, msg: 'Request not found' })
+            }
+            return rows;
+        })
 }

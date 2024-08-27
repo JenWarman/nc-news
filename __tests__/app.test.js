@@ -56,19 +56,27 @@ describe('nc-news API', () => {
     describe('GET /api/articles/:article_id', () => {
         test('200: responds with object containing article properties when requested with valid article_id', () => {
             return request(app).get('/api/articles/1')
-            .expect(200)
-            .then(({body}) => {
-                body.articles.forEach((article) => {
-                    expect(article).toHaveProperty("author", expect.any(String));
-                    expect(article).toHaveProperty("title", expect.any(String));
-                    expect(article).toHaveProperty("article_id", expect.any(Number));
-                    expect(article).toHaveProperty("body", expect.any(String))
-                    expect(article).toHaveProperty("topic", expect.any(String))
-                    expect(article).toHaveProperty("created_at", expect.any(String))
-                    expect(article).toHaveProperty("votes", expect.any(Number))
-                    expect(article).toHaveProperty("article_img_url", expect.any(String))
+                .expect(200)
+                .then(({ body }) => {
+                    body.articles.forEach((article) => {
+                        expect(article).toHaveProperty("author", expect.any(String));
+                        expect(article).toHaveProperty("title", expect.any(String));
+                        expect(article).toHaveProperty("article_id", expect.any(Number));
+                        expect(article).toHaveProperty("body", expect.any(String))
+                        expect(article).toHaveProperty("topic", expect.any(String))
+                        expect(article).toHaveProperty("created_at", expect.any(String))
+                        expect(article).toHaveProperty("votes", expect.any(Number))
+                        expect(article).toHaveProperty("article_img_url", expect.any(String))
+                    })
                 })
-            })
+        })
+        test('404: responds with error message if article_id is valid but does not exist', () => {
+            return request(app)
+                .get('/api/articles/999')
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Request not found');
+                })
         })
     })
 })

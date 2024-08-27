@@ -9,4 +9,11 @@ app.get('/api', getAllEndPoints)
 
 app.get('/api/articles/:article_id', getAllArticles)
 
+app.use((err, request, response, next) => {
+    if (err.status === 404) {
+        response.status(404).send({ msg: "Request not found" });
+    }
+    next();
+})
+
 module.exports = app;

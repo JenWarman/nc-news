@@ -22,12 +22,12 @@ exports.getAllEndPoints = (request, response, next) => {
 }
 
 exports.getAllArticles = (request, response, next) => {
-    const {article_id} = request.params;
+    const { article_id } = request.params;
     fetchArtcilesById(article_id)
-    .then((articles) => {
-        response.status(200).send({articles})
-    })
-    .catch((err) => {
-        next(err);
-    })
+        .then((articles) => {
+            response.status(200).send({ articles })
+        })
+        .catch((err) => {
+            next(err);
+        })
 }
