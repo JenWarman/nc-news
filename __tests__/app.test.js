@@ -36,13 +36,6 @@ describe('nc-news API', () => {
                     expect(slugArray).toEqual(alphabetisedTopics);
                 })
         })
-        // test('204: returns error if no topics exist', () => {
-        //     return request(app).get('/api/topics')
-        //         .expect(204)
-        //         .then(({ body }) => {
-        //         expect(body.msg).toBe("No content found")
-        //         })
-        // })
     })
     
     
