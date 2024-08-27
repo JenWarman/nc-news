@@ -1,4 +1,4 @@
-const { fetchAllTopics, fetchAllEndPoints, fetchArtcilesById } = require('../models/topics.models')
+const { fetchAllTopics, fetchAllEndPoints, fetchArticleById } = require('../models/topics.models')
 
 
 exports.getAllTopics = (request, response, next) => {
@@ -21,11 +21,11 @@ exports.getAllEndPoints = (request, response, next) => {
         });
 }
 
-exports.getAllArticles = (request, response, next) => {
+exports.getArticlesById = (request, response, next) => {
     const { article_id } = request.params;
-    fetchArtcilesById(article_id)
-        .then((articles) => {
-            response.status(200).send({ articles })
+    fetchArticleById(article_id)
+        .then((article) => {
+            response.status(200).send(article)
         })
         .catch((err) => {
             next(err);

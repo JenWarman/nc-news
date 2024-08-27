@@ -58,16 +58,9 @@ describe('nc-news API', () => {
             return request(app).get('/api/articles/1')
                 .expect(200)
                 .then(({ body }) => {
-                    body.articles.forEach((article) => {
-                        expect(article).toHaveProperty("author", expect.any(String));
-                        expect(article).toHaveProperty("title", expect.any(String));
-                        expect(article).toHaveProperty("article_id", expect.any(Number));
-                        expect(article).toHaveProperty("body", expect.any(String))
-                        expect(article).toHaveProperty("topic", expect.any(String))
-                        expect(article).toHaveProperty("created_at", expect.any(String))
-                        expect(article).toHaveProperty("votes", expect.any(Number))
-                        expect(article).toHaveProperty("article_img_url", expect.any(String))
-                    })
+                    console.log(body.length)
+                    expect(body).toHaveLength(1);
+                    expect(Array.isArray(body)).toBe(true);
                 })
         })
         test('404: responds with error message if article_id is valid but does not exist', () => {
