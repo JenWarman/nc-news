@@ -53,4 +53,31 @@ describe('nc-news API', () => {
                 })
         })
     })
+    describe('GET /api/articles/:article_id', () => {
+        test('200: responds with object containing article properties when requested with valid article_id', () => {
+            return request(app).get('/api/articles/1')
+                .expect(200)
+                .then(({ body }) => {
+                    console.log(body.length)
+                    expect(body).toHaveLength(1);
+                    expect(Array.isArray(body)).toBe(true);
+                })
+        })
+        test('404: responds with error message if article_id is valid but does not exist', () => {
+            return request(app)
+                .get('/api/articles/999')
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Request not found');
+                })
+        })
+        test('400: responds with error message if article_id is invalid', () => {
+            return request(app)
+                .get('/api/articles/IamNotAnId')
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Bad request');
+                })
+        })
+    })
 })
