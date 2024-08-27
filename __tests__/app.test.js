@@ -3,6 +3,7 @@ const app = require('../db/app');
 const data = require('../db/data/test-data');
 const request = require("supertest");
 const seed = require("../db/seeds/seed");
+const endPoints = require('../endpoints.json')
 
 beforeEach(() => {
     return seed(data);
@@ -36,26 +37,20 @@ describe('nc-news API', () => {
                     expect(slugArray).toEqual(alphabetisedTopics);
                 })
         })
-        // test('204: returns error if no topics exist', () => {
-        //     return request(app).get('/api/topics')
-        //         .expect(204)
-        //         .then(({ body }) => {
-        //         expect(body.msg).toBe("No content found")
-        //         })
-        // })
     })
-    
     describe('GET /api', () => {
         test('200: returns object with available endpoints', () => {
             return request(app).get('/api')
                 .expect(200)
                 .then(({ body }) => {
-                    Object.keys(body).filter((endpoint) => {
-                        expect(endpoint).toMatch("GET /api" || "GET /api/topics" || "GET /api/articles" || "GET /api/comments" || "GET /api/users")
+                    const endPointsFromBody = Object.keys(body).filter((endpoint) => {
+                        return endpoint;
                     })
+                    const endPointsFromFile = Object.keys(endPoints).filter((fileEndPoint) => {
+                        return fileEndPoint;
+                    })
+                    expect(endPointsFromBody).toEqual(endPointsFromFile);
                 })
         })
     })
-
-
 })
