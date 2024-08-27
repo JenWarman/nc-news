@@ -18,7 +18,6 @@ describe('nc-news API', () => {
                 .expect(200)
                 .then(({ body }) => {
                     body.rows.forEach((topic) => {
-                        console.log(topic)
                         expect(topic).toHaveProperty("description", expect.any(String));
                         expect(topic).toHaveProperty("slug", expect.any(String));
                     })
@@ -51,9 +50,7 @@ describe('nc-news API', () => {
             return request(app).get('/api')
                 .expect(200)
                 .then(({ body }) => {
-                    console.log(body, '<---body in test')
                     Object.keys(body).filter((endpoint) => {
-                        console.log(endpoint, "<---enpoint")
                         expect(endpoint).toMatch("GET /api" || "GET /api/topics" || "GET /api/articles" || "GET /api/comments" || "GET /api/users")
                     })
                 })
