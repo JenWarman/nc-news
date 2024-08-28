@@ -31,7 +31,7 @@ exports.fetchArticleById = (article_id) => {
 exports.fetchArticles = () => {
     const allFromArticles = db.query(`SELECT * FROM articles ORDER BY created_at DESC`);
     const getCommentCount = db.query(`SELECT article_id, COUNT(*)::INT FROM comments GROUP BY article_id`)
-    const promises = [ allFromArticles, getCommentCount];
+    const promises = [allFromArticles, getCommentCount];
     return Promise.all(promises).then(([articles, comments]) => {
         const articleObject = articles.rows.map((article_row) => {
             const commentRow = comments.rows.find((row) => {
@@ -52,5 +52,10 @@ exports.fetchArticles = () => {
     });
 }
 
-
+exports.fetchComments = (article_id) => {
+    return db.query(`SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at DESC`, [article_id])
+        .then(({ rows }) => {
+            return rows;
+        })
+}
 
