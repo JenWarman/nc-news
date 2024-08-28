@@ -27,3 +27,30 @@ exports.fetchArticleById = (article_id) => {
             return rows;
         })
 }
+
+exports.fetchArticles = () => {
+    const allFromArticles = db.query(`SELECT * FROM articles ORDER BY created_at DESC`);
+    const getCommentCount = db.query(`SELECT article_id, COUNT(*)::INT FROM comments GROUP BY article_id`)
+    const promises = [ allFromArticles, getCommentCount];
+    return Promise.all(promises).then(([articles, comments]) => {
+        const mapObject = articles.rows.map((article_row) => {
+            const commentRow = comments.rows.find((row) => {
+                return article_row.article_id === row.article_id
+            });
+            return {
+                "author": article_row.author,
+                "title": article_row.title,
+                "article_id": article_row.article_id,
+                "topic": article_row.topic,
+                "created_at": article_row.created_at,
+                "votes": article_row.votes,
+                "article_img_url": article_row.article_img_url,
+                "comment_count": commentRow ? commentRow.count : 0,
+            }
+        });
+        return mapObject;
+    });
+}
+
+
+
