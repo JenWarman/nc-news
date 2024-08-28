@@ -83,29 +83,55 @@ describe('nc-news API', () => {
     describe('GET /api/articles', () => {
         test('200: responds with array of article objects containing requested properties', () => {
             return request(app).get('/api/articles')
-            .expect(200)
-            .then(({body}) => {
-                expect(body.articles.length).toBeGreaterThan(1)
-                body.articles.forEach((article) => {
-                    expect(article).toHaveProperty("author", expect.any(String));
-                    expect(article).toHaveProperty("title", expect.any(String));
-                    expect(article).toHaveProperty("article_id", expect.any(Number));
-                    expect(article).toHaveProperty("topic", expect.any(String));
-                    expect(article).toHaveProperty("created_at", expect.any(String));
-                    expect(article).toHaveProperty("votes", expect.any(Number));
-                    expect(article).toHaveProperty("article_img_url", expect.any(String));
-                    expect(article).toHaveProperty("comment_count", expect.any(Number));
+                .expect(200)
+                .then(({ body }) => {
+                    expect(body.articles.length).toBeGreaterThan(1)
+                    body.articles.forEach((article) => {
+                        expect(article).toHaveProperty("author", expect.any(String));
+                        expect(article).toHaveProperty("title", expect.any(String));
+                        expect(article).toHaveProperty("article_id", expect.any(Number));
+                        expect(article).toHaveProperty("topic", expect.any(String));
+                        expect(article).toHaveProperty("created_at", expect.any(String));
+                        expect(article).toHaveProperty("votes", expect.any(Number));
+                        expect(article).toHaveProperty("article_img_url", expect.any(String));
+                        expect(article).toHaveProperty("comment_count", expect.any(Number));
+                    })
                 })
-            })
         })
         test('200: returns articles by date in descending order', () => {
             return request(app)
-            .get('/api/articles')
-            .expect(200)
-            .then(({body}) => {
-                expect(body.articles).toBeSortedBy("created_at", {descending: true});
-            });
+                .get('/api/articles')
+                .expect(200)
+                .then(({ body }) => {
+                    expect(body.articles).toBeSortedBy("created_at", { descending: true });
+                });
         });
     });
-    
+    describe.only('GET /api/articles/:article_id/comments', () => {
+        test('200: responds with array of comments for the given article_id', () => {
+            return request(app)
+                .get('/api/articles/1/comments')
+                .expect(200)
+                .then(({ body }) => {
+                    expect(body.comments.length).toBeGreaterThan(1);
+                    body.comments.forEach((comment) => {
+                        expect(comment).toHaveProperty("comment_id", expect.any(Number));
+                        expect(comment).toHaveProperty("votes", expect.any(Number));
+                        expect(comment).toHaveProperty("created_at", expect.any(String));
+                        expect(comment).toHaveProperty("author", expect.any(String));
+                        expect(comment).toHaveProperty("body", expect.any(String));
+                        expect(comment).toHaveProperty("article_id", expect.any(Number));
+                    })
+                })
+        })
+        test('200: returns comments in with most recent first', () => {
+            return request(app)
+                .get('/api/articles/1/comments', () => {
+                    expect(200)
+                        .then(({ body }) => {
+                            expect(body.comments).toBeSortedBy("created_at", { descending: true });
+                        })
+                })
+        })
+    })
 });
