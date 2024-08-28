@@ -35,7 +35,6 @@ exports.getArticlesById = (request, response, next) => {
 exports.getAllArticles = (request, response, next) => {
     fetchArticles()
     .then((articles) => {
-        // console.log(articles, '<--- articles in controller')
         response.status(200).send({articles})
     })
     .catch((err) => {
