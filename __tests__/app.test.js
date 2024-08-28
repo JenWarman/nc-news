@@ -5,6 +5,7 @@ const request = require("supertest");
 const seed = require("../db/seeds/seed");
 const endPoints = require('../endpoints.json')
 
+
 beforeEach(() => {
     return seed(data);
 });
@@ -79,7 +80,7 @@ describe('nc-news API', () => {
                 })
         })
     })
-    describe.only('GET /api/articles', () => {
+    describe('GET /api/articles', () => {
         test('200: responds with array of article objects', () => {
             return request(app).get('/api/articles')
                 .expect(200)
@@ -105,6 +106,14 @@ describe('nc-news API', () => {
                 })
             })
         })
-    })
+        test('200: returns articles by date in descending order', () => {
+            return request(app)
+            .get('/api/articles')
+            .expect(200)
+            .then(({body}) => {
+                expect(body.articles).toBeSortedBy("created_at", {descending: true});
+            });
+        });
+    });
     
-})
+});
