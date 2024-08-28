@@ -1,7 +1,8 @@
 const db = require('../db/connection')
 const endpoints = require('../endpoints.json')
 const fs = require('fs/promises');
-const { promises } = require()
+const { promises } = require();
+const format = require("pg-format");
 
 exports.fetchAllTopics = () => {
     return db.query(`SELECT * FROM topics`)
@@ -59,3 +60,12 @@ exports.fetchComments = (article_id) => {
         })
 }
 
+exports.addComment = (article_id, username, body) => {
+    return db.query(
+        `INSERT INTO comments (article_id, author, body) VALUES ($1, $2, $3) RETURNING *`, 
+        [article_id, username, body],
+    )
+    .then(({ rows }) => {
+        return rows
+    })
+}

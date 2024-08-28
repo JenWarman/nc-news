@@ -39,7 +39,7 @@ describe('nc-news API', () => {
                 })
         })
     })
-    
+
     describe('GET /api', () => {
         test('200: returns object with available endpoints', () => {
             return request(app).get('/api')
@@ -154,4 +154,21 @@ describe('nc-news API', () => {
                 })
         })
     })
+
+    describe('POST /api/articles/:article_id/comments', () => {
+        test('200: add comment object to article fetched by article_id', () => {
+            return request(app)
+                .post('/api/articles/1/comments')
+                .send({username: 'lurker', body: 'this is my very good and excellent comment'})
+                .then(({ body }) => {
+                    body.comment.forEach((comment) => {
+                        expect(comment).toHaveProperty("author", 'lurker');
+                        expect(comment).toHaveProperty("body", 'this is my very good and excellent comment');
+                        expect(comment).toHaveProperty("article_id", 1)
+                    })
+                })
+        })
+    })
 });
+
+
