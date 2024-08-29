@@ -1,4 +1,4 @@
-const { fetchAllTopics, fetchAllEndPoints, fetchArticleById, fetchArticles, fetchComments } = require('../models/topics.models')
+const { fetchAllTopics, fetchAllEndPoints, fetchArticleById, fetchArticles, fetchComments, addComment } = require('../models/topics.models')
 
 
 exports.getAllTopics = (request, response, next) => {
@@ -47,6 +47,18 @@ exports.getCommentsByArticleId = (request, response, next) => {
     fetchComments(article_id)
         .then((comments) => {
             response.status(200).send({ comments });
+        })
+        .catch((err) => {
+            next(err);
+        })
+}
+
+exports.postNewComment = (request, response, next) => {
+    const { article_id } = request.params
+    const { username, body } = request.body
+    addComment(article_id, username, body)
+        .then((comment) => {
+            response.status(200).send({ comment });
         })
         .catch((err) => {
             next(err);
