@@ -1,7 +1,6 @@
 const db = require('../db/connection')
 const endpoints = require('../endpoints.json')
 const fs = require('fs/promises');
-const { promises } = require();
 const format = require("pg-format");
 
 exports.fetchAllTopics = () => {
@@ -70,5 +69,12 @@ exports.addComment = (article_id, username, body) => {
             return Promise.reject({ status: 404, msg: 'Request not found' })
         }
         return rows
+    })
+}
+
+exports.updateVoteCount = (article_id, inc_votes) => {
+    return db.query(`UPDATE articles SET votes = votes+$1 WHERE article_id = $2 RETURNING *`, [inc_votes, article_id])
+    .then(({rows}) => {
+        return rows;
     })
 }

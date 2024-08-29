@@ -206,6 +206,21 @@ describe('nc-news API', () => {
             })
         })
     })
+
+    describe.only('PATCH /api/articles/:article_id', () => {
+        test('200: update an articles vote count using article_id', () => {
+            return request(app)
+            .patch('/api/articles/1')
+            .send({inc_votes: 1})
+            .expect(200)
+            .then(({body}) => {
+                body.article.forEach((article) => {
+                    expect(article).toHaveProperty("article_id", 1)
+                    expect(article).toHaveProperty("votes", 101);
+                })
+            })
+        })
+    })
 });
 
 
