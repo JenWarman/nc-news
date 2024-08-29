@@ -1,7 +1,6 @@
 const db = require('../db/connection')
 const endpoints = require('../endpoints.json')
 const fs = require('fs/promises');
-const { promises } = require();
 const format = require("pg-format");
 
 exports.fetchAllTopics = () => {
