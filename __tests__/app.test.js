@@ -160,6 +160,7 @@ describe('nc-news API', () => {
             return request(app)
                 .post('/api/articles/1/comments')
                 .send({username: 'lurker', body: 'this is my very good and excellent comment'})
+                .expect(200)
                 .then(({ body }) => {
                     body.comment.forEach((comment) => {
                         expect(comment).toHaveProperty("author", 'lurker');
@@ -167,6 +168,42 @@ describe('nc-news API', () => {
                         expect(comment).toHaveProperty("article_id", 1)
                     })
                 })
+        })
+        test('404: responds with error message if article_id is valid but does not exist', () => {
+            return request(app)
+                .post('/api/articles/999/comments')
+                .send({username: 'lurker', body: 'this is my very good and excellent comment'})
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Request not found');
+                })
+        })
+        test('400: responds with error message if article_id is invalid', () => {
+            return request(app)
+                .post('/api/articles/IamNotAnId/comments')
+                .send({username: 'lurker', body: 'this is my very good and excellent comment'})
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Bad request');
+                })
+        })
+        test('404: responds with error message if username is valid but not does not exist', () => {
+            return request(app)
+            .post('/api/articles/1/comments')
+            .send({username: 'Jen', body: 'this is my very good and excellent comment'})
+            .expect(404)
+            .then(({body}) => {
+                expect(body.msg).toBe('Request not found')
+            })
+        })
+        test('404: responds with error message if username and body are invalid data type', () => {
+            return request(app)
+            .post('/api/articles/1/comments')
+            .send({username: 123, body: 456})
+            .expect(404)
+            .then(({body}) => {
+                expect(body.msg).toBe('Request not found')
+            })
         })
     })
 });
