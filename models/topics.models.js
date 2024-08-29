@@ -69,10 +69,15 @@ exports.addComment = (article_id, username, body) => {
             return Promise.reject({ status: 404, msg: 'Request not found' })
         }
         return rows
-    }).catch((err) => {
-        if (err.code === '23503') {
-            throw {status: 404}
-        } 
-       throw err
-    });
+    })
+}
+
+exports.updateVoteCount = (article_id, inc_votes) => {
+    return db.query(`UPDATE articles SET votes = votes+$1 WHERE article_id = $2 RETURNING *`, [inc_votes, article_id])
+    .then(({rows}) => {
+        if (rows.length === 0) {
+            return Promise.reject({ status: 404, msg: 'Request not found' })
+        }
+        return rows;
+    })
 }
