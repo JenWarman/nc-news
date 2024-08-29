@@ -1,4 +1,4 @@
-const { fetchAllTopics, fetchAllEndPoints, fetchArticleById, fetchArticles, fetchComments, addComment, updateVoteCount } = require('../models/topics.models')
+const { fetchAllTopics, fetchAllEndPoints, fetchArticleById, fetchArticles, fetchComments, addComment, updateVoteCount, deleteComment } = require('../models/topics.models')
 
 
 exports.getAllTopics = (request, response, next) => {
@@ -71,6 +71,17 @@ exports.updateArticleById = (request, response, next) => {
     updateVoteCount(article_id, inc_votes)
     .then((article) => {
         response.status(200).send({article})
+    })
+    .catch((err) => {
+        next(err);
+    })
+}
+
+exports.deleteCommentById = (request, response, next) => {
+    const {comment_id} = request.params;
+    deleteComment(comment_id)
+    .then(() => {
+        response.status(204).send();
     })
     .catch((err) => {
         next(err);

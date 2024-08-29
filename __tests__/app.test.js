@@ -271,17 +271,14 @@ describe('nc-news API', () => {
         })
     })
 
-    describe('PATCH /api/articles/:article_id', () => {
-        test('200: update article by article_id with inc_votes object', () => {
+    describe('DELETE /api/comments/:comment_id', () => {
+        test('204: deletes comment using comment_id and responds with error message', () => {
             return request(app)
-            .patch('/api/article/1')
-            .send({ inc_votes: 1})
-            .expect(200)
+            .delete('/api/comments/1')
+            .expect(204)
             .then(({body}) => {
-                body.votes.forEach((vote) => {
-                    expect(vote).toHaveProperty("votes", 101)
-                })
-            })
+                expect(body).toEqual({});
+            });
         })
     })
 });
