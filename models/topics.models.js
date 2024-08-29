@@ -70,10 +70,5 @@ exports.addComment = (article_id, username, body) => {
             return Promise.reject({ status: 404, msg: 'Request not found' })
         }
         return rows
-    }).catch((err) => {
-        if (err.code === '23503') {
-            throw {status: 404}
-        } 
-       throw err
-    });
+    })
 }

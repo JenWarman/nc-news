@@ -196,7 +196,7 @@ describe('nc-news API', () => {
                 expect(body.msg).toBe('Request not found')
             })
         })
-        test('404: responds with error message if username and body are invalid data type', () => {
+        test('400: responds with error message if username and body are invalid data type or missing required fields', () => {
             return request(app)
             .post('/api/articles/1/comments')
             .send({username: 123, body: 456})
