@@ -1,5 +1,5 @@
 const db = require('../db/connection');
-const app = require('../db/app');
+const app = require('../errors');
 const data = require('../db/data/test-data');
 const request = require("supertest");
 const seed = require("../db/seeds/seed");
@@ -159,7 +159,7 @@ describe('nc-news API', () => {
         test('200: add comment object to article fetched by article_id', () => {
             return request(app)
                 .post('/api/articles/1/comments')
-                .send({username: 'lurker', body: 'this is my very good and excellent comment'})
+                .send({ username: 'lurker', body: 'this is my very good and excellent comment' })
                 .expect(200)
                 .then(({ body }) => {
                     body.comment.forEach((comment) => {
@@ -172,7 +172,7 @@ describe('nc-news API', () => {
         test('404: responds with error message if article_id is valid but does not exist', () => {
             return request(app)
                 .post('/api/articles/999/comments')
-                .send({username: 'lurker', body: 'this is my very good and excellent comment'})
+                .send({ username: 'lurker', body: 'this is my very good and excellent comment' })
                 .expect(404)
                 .then(({ body }) => {
                     expect(body.msg).toBe('Request not found');
@@ -181,7 +181,7 @@ describe('nc-news API', () => {
         test('400: responds with error message if article_id is invalid', () => {
             return request(app)
                 .post('/api/articles/IamNotAnId/comments')
-                .send({username: 'lurker', body: 'this is my very good and excellent comment'})
+                .send({ username: 'lurker', body: 'this is my very good and excellent comment' })
                 .expect(400)
                 .then(({ body }) => {
                     expect(body.msg).toBe('Bad request');
@@ -189,36 +189,85 @@ describe('nc-news API', () => {
         })
         test('404: responds with error message if username is valid but not does not exist', () => {
             return request(app)
-            .post('/api/articles/1/comments')
-            .send({username: 'Jen', body: 'this is my very good and excellent comment'})
-            .expect(404)
-            .then(({body}) => {
-                expect(body.msg).toBe('Request not found')
-            })
+                .post('/api/articles/1/comments')
+                .send({ username: 'Jen', body: 'this is my very good and excellent comment' })
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Request not found')
+                })
         })
-        test('400: responds with error message if username and body are invalid data type or missing required fields', () => {
+        test('404: responds with error message if username and body are invalid data type or missing required fields', () => {
             return request(app)
-            .post('/api/articles/1/comments')
-            .send({username: 123, body: 456})
-            .expect(404)
-            .then(({body}) => {
-                expect(body.msg).toBe('Request not found')
-            })
+                .post('/api/articles/1/comments')
+                .send({ username: 123, body: 456 })
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Request not found')
+                })
         })
     })
 
-    describe.only('PATCH /api/articles/:article_id', () => {
-        test('200: update an articles vote count using article_id', () => {
+    describe('PATCH /api/articles/:article_id', () => {
+        test('200: update an articles  positive vote count using article_id', () => {
+            return request(app)
+                .patch('/api/articles/1')
+                .send({ inc_votes: 1 })
+                .expect(200)
+                .then(({ body }) => {
+                    body.article.forEach((article) => {
+                        expect(article).toHaveProperty("article_id", 1)
+                        expect(article).toHaveProperty("votes", 101);
+                        expect(article).toHaveProperty("author", "butter_bridge");
+                        expect(article).toHaveProperty("title", "Living in the shadow of a great man");
+                        expect(article).toHaveProperty("topic", "mitch");
+                        expect(article).toHaveProperty("created_at","2020-07-09T20:11:00.000Z" );
+                        expect(article).toHaveProperty("article_img_url", "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700");
+                    })
+                })
+        })
+        test('200: update an articles  negative vote count using article_id', () => {
+            return request(app)
+                .patch('/api/articles/1')
+                .send({ inc_votes: -100 })
+                .expect(200)
+                .then(({ body }) => {
+                    body.article.forEach((article) => {
+                        expect(article).toHaveProperty("article_id", 1)
+                        expect(article).toHaveProperty("votes", 0);
+                        expect(article).toHaveProperty("author", "butter_bridge");
+                        expect(article).toHaveProperty("title", "Living in the shadow of a great man");
+                        expect(article).toHaveProperty("topic", "mitch");
+                        expect(article).toHaveProperty("created_at","2020-07-09T20:11:00.000Z" );
+                        expect(article).toHaveProperty("article_img_url", "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700");
+                    })
+                })
+        })
+        test('400: responds with error message if inc_votes is an invalid data type or empty', () => {
             return request(app)
             .patch('/api/articles/1')
-            .send({inc_votes: 1})
-            .expect(200)
+            .send({inc_votes: "my vote"})
+            .expect(400)
             .then(({body}) => {
-                body.article.forEach((article) => {
-                    expect(article).toHaveProperty("article_id", 1)
-                    expect(article).toHaveProperty("votes", 101);
-                })
+                expect(body.msg).toBe('Bad request')
             })
+        })
+        test('404: responds with error message if article_id is valid but does not exist', () => {
+            return request(app)
+                .patch('/api/articles/999')
+                .send({ inc_votes: 1 })
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Request not found');
+                })
+        })
+        test('400: responds with error message if article_id is invalid', () => {
+            return request(app)
+                .patch('/api/articles/IamNotAnId')
+                .expect(400)
+                .send({ inc_votes: 1 })
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Bad request');
+                })
         })
     })
 });
