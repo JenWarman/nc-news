@@ -375,6 +375,33 @@ describe('nc-news API', () => {
                     })
                 })
         })
+        test('200: responds with array of articles that match the topic query', () => {
+            return request(app)
+                .get('/api/articles?topic=cats')
+                .expect(200)
+                .then(({ body }) => {
+                    expect(body.articles).toHaveLength(1);
+                    body.articles.forEach((article) => {
+                        expect(article).toHaveProperty('topic', 'cats');
+                    })
+                })
+        })
+        test('404: repsonds with error status and message if topic is valid but does not exist', () => {
+            return request(app)
+                .get('/api/articles?topic=dogs')
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Request not found')
+                })
+        })
+        test('404: repsonds with error status and message if topic is invalid', () => {
+            return request(app)
+                .get('/api/articles?topic=1234')
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Request not found')
+                })
+        })
     })
 });
 

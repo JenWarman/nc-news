@@ -1,4 +1,4 @@
-const { fetchAllTopics, fetchAllEndPoints, fetchArticleById, fetchArticles, fetchComments, addComment, updateVoteCount, deleteComment, fetchAllUsers,  } = require('../models/topics.models')
+const { fetchAllTopics, fetchAllEndPoints, fetchArticleById, fetchArticles, fetchComments, addComment, updateVoteCount, deleteComment, fetchAllUsers, } = require('../models/topics.models')
 
 
 exports.getAllTopics = (request, response, next) => {
