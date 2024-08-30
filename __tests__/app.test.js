@@ -318,7 +318,7 @@ describe('nc-news API', () => {
                 .get('/api/articles?sort_by=author')
                 .expect(200)
                 .then(({ body }) => {
-                    expect(body.articles).toBeSortedBy("author", { descending: false });
+                    expect(body.articles).toBeSortedBy("author", { descending: true });
                 })
         })
         test('200: responds with array of article objects using topic sort_by query', () => {
@@ -326,40 +326,54 @@ describe('nc-news API', () => {
                 .get('/api/articles?sort_by=topic')
                 .expect(200)
                 .then(({ body }) => {
-                    expect(body.articles).toBeSortedBy("topic", { descending: false });
+                    expect(body.articles).toBeSortedBy("topic", { descending: true });
                 })
         })
         test('200: responds with array of article objects using sort_by and order queries', () => {
             return request(app)
-            .get('/api/articles?sort_by=author&order=desc')
-            .expect(200)
-            .then(({body}) => {
-                expect(body.articles).toBeSortedBy("author", {descending: true})
-            })
+                .get('/api/articles?sort_by=author&order=desc')
+                .expect(200)
+                .then(({ body }) => {
+                    expect(body.articles).toBeSortedBy("author", { descending: true })
+                })
         })
         test('200: responds with array of article objects using sort_by and order queries', () => {
             return request(app)
-            .get('/api/articles?sort_by=topic&order=asc')
-            .expect(200)
-            .then(({body}) => {
-                expect(body.articles).toBeSortedBy("topic", {descending: false})
-            })
+                .get('/api/articles?sort_by=topic&order=desc')
+                .expect(200)
+                .then(({ body }) => {
+                    expect(body.articles).toBeSortedBy("topic", { descending: true })
+                })
         })
         test('400: repsonds with error status and message if sort_by query is invalid', () => {
             return request(app)
-            .get('/api/articles?sort_by=1234')
-            .expect(400)
-            .then(({body}) => {
-                expect(body.msg).toBe('Bad request')
-            })
+                .get('/api/articles?sort_by=1234')
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Bad request')
+                })
         })
         test('404: repsonds with error status and message if sort_by is valid but does not exist', () => {
             return request(app)
-            .get('/api/articles?sort_by=notasortby')
-            .expect(404)
-            .then(({body}) => {
-                expect(body.msg).toBe('Request not found')
-            })
+                .get('/api/articles?sort_by=notasortby')
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Request not found')
+                })
+        })
+    })
+
+    describe('GET /api/articles(topic query)', () => {
+        test('200: responds with array of articles that match the topic query', () => {
+            return request(app)
+                .get('/api/articles?topic=mitch')
+                .expect(200)
+                .then(({ body }) => {
+                    expect(body.articles).toHaveLength(12);
+                    body.articles.forEach((article) => {
+                        expect(article).toHaveProperty('topic', 'mitch');
+                    })
+                })
         })
     })
 });

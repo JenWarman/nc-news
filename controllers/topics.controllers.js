@@ -1,8 +1,8 @@
-const { fetchAllTopics, fetchAllEndPoints, fetchArticleById, fetchArticles, fetchComments, addComment, updateVoteCount, deleteComment, fetchAllUsers } = require('../models/topics.models')
+const { fetchAllTopics, fetchAllEndPoints, fetchArticleById, fetchArticles, fetchComments, addComment, updateVoteCount, deleteComment, fetchAllUsers,  } = require('../models/topics.models')
 
 
 exports.getAllTopics = (request, response, next) => {
-    fetchAllTopics()
+    fetchAllTopics(request.params)
         .then((topics) => {
             response.status(200).send(topics);
         })
@@ -97,3 +97,4 @@ exports.getAllUsers = (request, response, next) => {
             next(err);
         })
 }
+
