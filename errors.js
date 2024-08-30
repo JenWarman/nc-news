@@ -12,7 +12,7 @@ app.use((err, request, response, next) => {
     }
     if (err.code === '23503') {
         response.status(404).send({ msg: "Request not found" });
-    } 
+    }
     next();
 })
 

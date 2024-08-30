@@ -220,7 +220,7 @@ describe('nc-news API', () => {
                         expect(article).toHaveProperty("author", "butter_bridge");
                         expect(article).toHaveProperty("title", "Living in the shadow of a great man");
                         expect(article).toHaveProperty("topic", "mitch");
-                        expect(article).toHaveProperty("created_at","2020-07-09T20:11:00.000Z" );
+                        expect(article).toHaveProperty("created_at", "2020-07-09T20:11:00.000Z");
                         expect(article).toHaveProperty("article_img_url", "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700");
                     })
                 })
@@ -237,19 +237,19 @@ describe('nc-news API', () => {
                         expect(article).toHaveProperty("author", "butter_bridge");
                         expect(article).toHaveProperty("title", "Living in the shadow of a great man");
                         expect(article).toHaveProperty("topic", "mitch");
-                        expect(article).toHaveProperty("created_at","2020-07-09T20:11:00.000Z" );
+                        expect(article).toHaveProperty("created_at", "2020-07-09T20:11:00.000Z");
                         expect(article).toHaveProperty("article_img_url", "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700");
                     })
                 })
         })
         test('400: responds with error message if inc_votes is an invalid data type or empty', () => {
             return request(app)
-            .patch('/api/articles/1')
-            .send({inc_votes: "my vote"})
-            .expect(400)
-            .then(({body}) => {
-                expect(body.msg).toBe('Bad request')
-            })
+                .patch('/api/articles/1')
+                .send({ inc_votes: "my vote" })
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Bad request')
+                })
         })
         test('404: responds with error message if article_id is valid but does not exist', () => {
             return request(app)
@@ -274,11 +274,19 @@ describe('nc-news API', () => {
     describe('DELETE /api/comments/:comment_id', () => {
         test('204: deletes comment using comment_id and responds with error message', () => {
             return request(app)
-            .delete('/api/comments/1')
-            .expect(204)
-            .then(({body}) => {
-                expect(body).toEqual({});
-            });
+                .delete('/api/comments/1')
+                .expect(204)
+                .then(({ body }) => {
+                    expect(body).toEqual({});
+                });
+        })
+        test('400: responds with 400 error message if comment_id is invalid', () => {
+            return request(app)
+                .delete('/api/comments/iamnotacommentid')
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Bad request')
+                })
         })
     })
 });
