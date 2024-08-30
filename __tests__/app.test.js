@@ -329,6 +329,38 @@ describe('nc-news API', () => {
                     expect(body.articles).toBeSortedBy("topic", { descending: false });
                 })
         })
+        test('200: responds with array of article objects using sort_by and order queries', () => {
+            return request(app)
+            .get('/api/articles?sort_by=author&order=desc')
+            .expect(200)
+            .then(({body}) => {
+                expect(body.articles).toBeSortedBy("author", {descending: true})
+            })
+        })
+        test('200: responds with array of article objects using sort_by and order queries', () => {
+            return request(app)
+            .get('/api/articles?sort_by=topic&order=asc')
+            .expect(200)
+            .then(({body}) => {
+                expect(body.articles).toBeSortedBy("topic", {descending: false})
+            })
+        })
+        test('400: repsonds with error status and message if sort_by query is invalid', () => {
+            return request(app)
+            .get('/api/articles?sort_by=1234')
+            .expect(400)
+            .then(({body}) => {
+                expect(body.msg).toBe('Bad request')
+            })
+        })
+        test('404: repsonds with error status and message if sort_by is valid but does not exist', () => {
+            return request(app)
+            .get('/api/articles?sort_by=notasortby')
+            .expect(404)
+            .then(({body}) => {
+                expect(body.msg).toBe('Request not found')
+            })
+        })
     })
 });
 

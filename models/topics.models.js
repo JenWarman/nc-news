@@ -29,11 +29,18 @@ exports.fetchArticleById = (article_id) => {
 }
 
 exports.fetchArticles = (queries) => {
-    const { sort_by } = queries;
+    const { sort_by, order } = queries;
     const sortByInputs = ["author", "topic", "created_at"]
     let queryString = `SELECT * FROM articles`;
     if (sort_by) {
         queryString += ` ORDER BY ${sort_by}`
+        if (order === "desc") {
+            queryString += ` DESC`
+        } else {
+            if (order === "asc") {
+                queryString += ` ASC`
+            }
+        }
         return db.query(queryString)
             .then(({ rows }) => {
                 return rows;
