@@ -85,3 +85,10 @@ exports.updateVoteCount = (article_id, inc_votes) => {
 exports.deleteComment = (comment_id) => {
     return db.query(`DELETE FROM comments WHERE comment_id = $1`, [comment_id])
 }
+
+exports.fetchAllUsers = () => {
+    return db.query(`SELECT * FROM users`)
+    .then(({rows}) => {
+        return {rows};
+    })
+}

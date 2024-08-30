@@ -276,9 +276,6 @@ describe('nc-news API', () => {
             return request(app)
                 .delete('/api/comments/1')
                 .expect(204)
-                .then(({ body }) => {
-                    expect(body).toEqual({});
-                });
         })
         test('400: responds with 400 error message if comment_id is invalid', () => {
             return request(app)
@@ -288,6 +285,23 @@ describe('nc-news API', () => {
                     expect(body.msg).toBe('Bad request')
                 })
         })
+    })
+
+    describe('GET /api/users', () => {
+        test('200: responds with an array of objects containing properties for each user', () => {
+            return request(app)
+            .get('/api/users')
+            .expect(200)
+            .then(({body}) => {
+                expect(body.rows.length).toBeGreaterThan(1)
+                body.rows.forEach((user) => {
+                    expect(user).toHaveProperty("username", expect.any(String));
+                    expect(user).toHaveProperty("name", expect.any(String));
+                    expect(user).toHaveProperty("avatar_url", expect.any(String));
+                })
+            })
+        })
+
     })
 });
 

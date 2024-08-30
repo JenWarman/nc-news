@@ -1,4 +1,4 @@
-const { fetchAllTopics, fetchAllEndPoints, fetchArticleById, fetchArticles, fetchComments, addComment, updateVoteCount, deleteComment } = require('../models/topics.models')
+const { fetchAllTopics, fetchAllEndPoints, fetchArticleById, fetchArticles, fetchComments, addComment, updateVoteCount, deleteComment, fetchAllUsers } = require('../models/topics.models')
 
 
 exports.getAllTopics = (request, response, next) => {
@@ -81,9 +81,19 @@ exports.deleteCommentById = (request, response, next) => {
     const { comment_id } = request.params;
     deleteComment(comment_id)
         .then(() => {
-            response.status(204).send();
+            response.sendStatus(204);
         })
         .catch((err) => {
             next(err);
         })
+}
+
+exports.getAllUsers = (request, response, next) => {
+    fetchAllUsers()
+    .then((users) => {
+        response.status(200).send(users)
+    })
+    .catch((err) => {
+        next(err);
+    })
 }
