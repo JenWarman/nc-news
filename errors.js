@@ -13,6 +13,12 @@ app.use((err, request, response, next) => {
     if (err.code === '23503') {
         response.status(404).send({ msg: "Request not found" });
     }
+    if(err.code === '42P10') {
+        response.status(400).send({msg: "Bad request"})
+    }
+    if (err.code === '42703') {
+        response.status(404).send({msg: "Request not found"})
+    }
     next();
 })
 
