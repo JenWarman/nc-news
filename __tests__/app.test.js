@@ -290,18 +290,37 @@ describe('nc-news API', () => {
     describe('GET /api/users', () => {
         test('200: responds with an array of objects containing properties for each user', () => {
             return request(app)
-            .get('/api/users')
-            .expect(200)
-            .then(({body}) => {
-                expect(body.rows.length).toBeGreaterThan(1)
-                body.rows.forEach((user) => {
-                    expect(user).toHaveProperty("username", expect.any(String));
-                    expect(user).toHaveProperty("name", expect.any(String));
-                    expect(user).toHaveProperty("avatar_url", expect.any(String));
+                .get('/api/users')
+                .expect(200)
+                .then(({ body }) => {
+                    expect(body.rows.length).toBeGreaterThan(1)
+                    body.rows.forEach((user) => {
+                        expect(user).toHaveProperty("username", expect.any(String));
+                        expect(user).toHaveProperty("name", expect.any(String));
+                        expect(user).toHaveProperty("avatar_url", expect.any(String));
+                    })
                 })
-            })
         })
 
+    })
+
+    describe('GET /api/articles (sorting queries)', () => {
+        test('200: responds with array of article objects sorted by default sort_by query - created_at', () => {
+            return request(app)
+                .get('/api/articles')
+                .expect(200)
+                .then(({ body }) => {
+                    expect(body.articles).toBeSortedBy("created_at", { descending: true });
+                })
+        })
+        test('200: responds with array of article objects using author sort_by query', () => {
+            return request(app)
+                .get('/api/articles?sort_by=author')
+                .expect(200)
+                .then(({ body }) => {
+                    expect(body.articles).toBeSortedBy("author", { descending: false });
+                })
+        })
     })
 });
 

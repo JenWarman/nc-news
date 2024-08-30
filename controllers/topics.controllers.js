@@ -33,7 +33,7 @@ exports.getArticlesById = (request, response, next) => {
 }
 
 exports.getAllArticles = (request, response, next) => {
-    fetchArticles()
+    fetchArticles(request.query)
         .then((articles) => {
             response.status(200).send({ articles })
         })
@@ -90,10 +90,10 @@ exports.deleteCommentById = (request, response, next) => {
 
 exports.getAllUsers = (request, response, next) => {
     fetchAllUsers()
-    .then((users) => {
-        response.status(200).send(users)
-    })
-    .catch((err) => {
-        next(err);
-    })
+        .then((users) => {
+            response.status(200).send(users)
+        })
+        .catch((err) => {
+            next(err);
+        })
 }

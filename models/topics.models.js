@@ -28,7 +28,14 @@ exports.fetchArticleById = (article_id) => {
         })
 }
 
-exports.fetchArticles = () => {
+exports.fetchArticles = (queries) => {
+    const { sort_by } = queries;
+    if (sort_by) {
+        return db.query(`SELECT * FROM articles ORDER BY author`)
+            .then(({ rows }) => {
+                return rows;
+            })
+    }
     const allFromArticles = db.query(`SELECT * FROM articles ORDER BY created_at DESC`);
     const getCommentCount = db.query(`SELECT article_id, COUNT(*)::INT FROM comments GROUP BY article_id`)
     const promises = [allFromArticles, getCommentCount];
@@ -51,6 +58,8 @@ exports.fetchArticles = () => {
         return articleObject;
     });
 }
+
+
 
 exports.fetchComments = (article_id) => {
     return db.query(`SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at DESC`, [article_id])
@@ -88,7 +97,7 @@ exports.deleteComment = (comment_id) => {
 
 exports.fetchAllUsers = () => {
     return db.query(`SELECT * FROM users`)
-    .then(({rows}) => {
-        return {rows};
-    })
+        .then(({ rows }) => {
+            return { rows };
+        })
 }
