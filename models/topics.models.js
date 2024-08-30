@@ -29,20 +29,24 @@ exports.fetchArticleById = (article_id) => {
 }
 
 exports.fetchArticles = (queries) => {
-    const { sort_by, order } = queries;
-    const sortByInputs = ["author", "topic", "created_at"]
+    const { sort_by, order, topic } = queries;
     let queryString = `SELECT * FROM articles`;
     if (sort_by) {
-        queryString += ` ORDER BY ${sort_by}`
-        if (order === "desc") {
-            queryString += ` DESC`
-        } else {
-            if (order === "asc") {
-                queryString += ` ASC`
-            }
+        queryString += ` ORDER BY ${sort_by} DESC`
+        if (order === 'asc') {
+            queryString += ` ASC`
         }
         return db.query(queryString)
             .then(({ rows }) => {
+                return rows;
+            })
+    }
+    if (topic) {
+        return db.query(`SELECT * FROM articles WHERE topic=$1`, [topic])
+            .then(({ rows }) => {
+                if (rows.length === 0) {
+                    return Promise.reject({ status: 404, msg: 'Request not found' })
+                }
                 return rows;
             })
     }
@@ -111,3 +115,4 @@ exports.fetchAllUsers = () => {
             return { rows };
         })
 }
+
