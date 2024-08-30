@@ -287,7 +287,7 @@ describe('nc-news API', () => {
         })
     })
 
-    describe('GET /api/user', () => {
+    describe('GET /api/users', () => {
         test('200: responds with an array of objects containing properties for each user', () => {
             return request(app)
             .get('/api/users')
@@ -301,6 +301,7 @@ describe('nc-news API', () => {
                 })
             })
         })
+
     })
 });
 
