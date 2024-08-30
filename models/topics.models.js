@@ -30,8 +30,11 @@ exports.fetchArticleById = (article_id) => {
 
 exports.fetchArticles = (queries) => {
     const { sort_by } = queries;
+    const sortByInputs = ["author", "topic", "created_at"]
+    let queryString = `SELECT * FROM articles`;
     if (sort_by) {
-        return db.query(`SELECT * FROM articles ORDER BY author`)
+        queryString += ` ORDER BY ${sort_by}`
+        return db.query(queryString)
             .then(({ rows }) => {
                 return rows;
             })

@@ -321,6 +321,14 @@ describe('nc-news API', () => {
                     expect(body.articles).toBeSortedBy("author", { descending: false });
                 })
         })
+        test('200: responds with array of article objects using topic sort_by query', () => {
+            return request(app)
+                .get('/api/articles?sort_by=topic')
+                .expect(200)
+                .then(({ body }) => {
+                    expect(body.articles).toBeSortedBy("topic", { descending: false });
+                })
+        })
     })
 });
 
